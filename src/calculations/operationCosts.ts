@@ -18,13 +18,18 @@ export const calculateOperationCosts = (
   defaultTravelers: string | number,
   exchangeRate: string | number,
   iofPercentage: string | number,
-  irRemittancePercentage: string | number
+  irRemittancePercentage: string | number,
+  exchangeSpreadPercentage: string | number
 ): OperationCostsResult => {
   const defaultQuantity = toDecimal(defaultTravelers);
-  const cotacao = toDecimal(exchangeRate);
+  const rawCotacao = toDecimal(exchangeRate);
   
   const percentualIOF = parsePercentage(iofPercentage);
   const percentualIR = parsePercentage(irRemittancePercentage);
+  const percentualSpread = parsePercentage(exchangeSpreadPercentage);
+  
+  // Câmbio Efetivo = Cotação + Spread Cambial
+  const cotacaoEfetiva = rawCotacao.times(toDecimal(1).plus(percentualSpread));
   const percentualTotalRemessa = percentualIOF.plus(percentualIR);
 
   let totalUnitarioMoeda = toDecimal(0);
@@ -45,8 +50,8 @@ export const calculateOperationCosts = (
     }
   });
 
-  const totalUnitarioRealSemRemessa = totalUnitarioMoeda.times(cotacao);
-  const totalGrupoRealSemRemessa = totalGrupoMoeda.times(cotacao);
+  const totalUnitarioRealSemRemessa = totalUnitarioMoeda.times(cotacaoEfetiva);
+  const totalGrupoRealSemRemessa = totalGrupoMoeda.times(cotacaoEfetiva);
 
   const custoRemessaUnitario = totalUnitarioRealSemRemessa.times(percentualTotalRemessa);
   const custoRemessaGrupo = totalGrupoRealSemRemessa.times(percentualTotalRemessa);

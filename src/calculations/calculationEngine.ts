@@ -33,7 +33,8 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     data.travelerQuantity,
     data.exchangeRate,
     data.percentagesSnapshot.iof,
-    data.percentagesSnapshot.impostoRendaRemessa
+    data.percentagesSnapshot.impostoRendaRemessa,
+    data.percentagesSnapshot.exchangeSpread
   );
 
   addMemory(
@@ -77,7 +78,8 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     data.percentagesSnapshot.traderCaptador,
     data.tourLeaderCosts,
     data.mentorCost,
-    data.travelerQuantity
+    data.travelerQuantity,
+    data.freePassengers || '0'
   );
 
   addMemory(

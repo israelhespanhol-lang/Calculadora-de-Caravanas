@@ -4,6 +4,8 @@ import { PrintView } from './PrintView';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Download, X, Loader2, FileEdit } from 'lucide-react';
+import { getCaravans } from '../../../repositories/caravanRepository';
+import { calculateCaravan } from '../../../calculations/calculationEngine';
 
 interface Props {
   caravan: CaravanData;
@@ -17,6 +19,11 @@ export const PdfEditorModal: React.FC<Props> = ({ caravan, result, onClose }) =>
   const [draftIndividualPrice, setDraftIndividualPrice] = useState<string | number>(Number(result.valorVendaIndividual).toFixed(2));
   const [draftTotalPrice, setDraftTotalPrice] = useState<string | number>(Number(result.valorVendaCaravana).toFixed(2));
   const [draftObservations, setDraftObservations] = useState(caravan.observations || '');
+  
+  const [comparisonCaravanId, setComparisonCaravanId] = useState<string>('');
+  const allCaravans = getCaravans().filter(c => c.id !== caravan.id);
+  const comparisonCaravan = allCaravans.find(c => c.id === comparisonCaravanId);
+  const comparisonResult = comparisonCaravan ? calculateCaravan(comparisonCaravan) : undefined;
   
   const [isExporting, setIsExporting] = useState(false);
 
@@ -72,6 +79,20 @@ export const PdfEditorModal: React.FC<Props> = ({ caravan, result, onClose }) =>
             <div className="space-y-6">
               <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl text-sm text-blue-200">
                 <p>As alterações feitas aqui refletirão apenas no arquivo PDF final. Elas <strong>não alterarão</strong> os dados oficiais do projeto.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-2">Comparar com outro pacote (Opcional)</label>
+                <select 
+                  className="w-full rounded-lg bg-slate-800 border border-slate-600 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 p-2.5 transition-all"
+                  value={comparisonCaravanId}
+                  onChange={(e) => setComparisonCaravanId(e.target.value)}
+                >
+                  <option value="">Nenhum</option>
+                  {allCaravans.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -137,6 +158,8 @@ export const PdfEditorModal: React.FC<Props> = ({ caravan, result, onClose }) =>
                 draftIndividualPrice={String(draftIndividualPrice)}
                 draftTotalPrice={String(draftTotalPrice)}
                 draftObservations={draftObservations}
+                comparisonCaravan={comparisonCaravan}
+                comparisonResult={comparisonResult}
               />
             </div>
           </div>

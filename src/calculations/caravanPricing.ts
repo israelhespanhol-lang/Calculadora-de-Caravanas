@@ -38,7 +38,8 @@ export const calculateCaravanPricing = (
   traderCaptadorPercentage: string | number,
   tourLeaderCosts: TourLeaderCosts,
   mentorCost: string | number,
-  travelerQuantity: string | number
+  travelerQuantity: string | number,
+  freePassengers: string | number
 ): CaravanPricingResult => {
   
   const impostoPerc = parsePercentage(impostoPercentage);
@@ -111,8 +112,13 @@ export const calculateCaravanPricing = (
     .plus(mentorComImposto);
 
   const travelers = toDecimal(travelerQuantity);
-  const valorVendaIndividual = travelers.greaterThan(0) 
-    ? valorVendaCaravana.dividedBy(travelers)
+  const frees = toDecimal(freePassengers);
+  const payingTravelers = travelers.minus(frees);
+  
+  // Rateio inteligente das cortesias: O custo total do grupo continua sendo para todos, 
+  // mas o valor individual de venda é rateado apenas entre os pagantes.
+  const valorVendaIndividual = payingTravelers.greaterThan(0) 
+    ? valorVendaCaravana.dividedBy(payingTravelers)
     : new Decimal(0);
 
   return {

@@ -64,6 +64,8 @@ const defaultSettings: Settings = {
     traderCaptador: '15',
     iof: '3.5',
     impostoRendaRemessa: '7',
+    exchangeSpread: '2',
+    exchangeIOF: '1.1'
   }
 };
 

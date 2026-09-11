@@ -116,8 +116,16 @@ export const SettingsModal: React.FC<Props> = ({ onClose, globalSettings, onSave
                 <input type="number" step="0.01" className="w-full border-slate-600/50 rounded-lg p-2.5 bg-slate-800/50 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all" value={localSettings.defaultPercentages.iof} onChange={e => updatePerc('iof', e.target.value)} />
               </div>
               <div>
-                <label className="block text-sm text-slate-400 mb-2">IR/Custo Remessa</label>
+                <label className="block text-sm text-slate-400 mb-2">IR/Custo Remessa (%)</label>
                 <input type="number" step="0.01" className="w-full border-slate-600/50 rounded-lg p-2.5 bg-slate-800/50 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all" value={localSettings.defaultPercentages.impostoRendaRemessa} onChange={e => updatePerc('impostoRendaRemessa', e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">Spread Cambial (%)</label>
+                <input type="number" step="0.01" className="w-full border-slate-600/50 rounded-lg p-2.5 bg-slate-800/50 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all" value={localSettings.defaultPercentages.exchangeSpread} onChange={e => updatePerc('exchangeSpread', e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-sm text-slate-400 mb-2">IOF Cambial (%)</label>
+                <input type="number" step="0.01" className="w-full border-slate-600/50 rounded-lg p-2.5 bg-slate-800/50 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all" value={localSettings.defaultPercentages.exchangeIOF} onChange={e => updatePerc('exchangeIOF', e.target.value)} />
               </div>
             </div>
           </section>

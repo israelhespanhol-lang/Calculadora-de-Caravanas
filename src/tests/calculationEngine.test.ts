@@ -9,6 +9,7 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
       id: 'test-1',
       name: 'Caravana Teste',
       travelerQuantity: '20',
+      freePassengers: '0',
       responsible: 'Admin',
       creationDate: '2026-09-11',
       quoteDate: '2026-09-11',
@@ -36,6 +37,8 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
         traderCaptador: '15',
         iof: '3.5',
         impostoRendaRemessa: '7',
+        exchangeSpread: '0',
+        exchangeIOF: '0',
       },
       operationItems: [
         { id: '1', description: 'Hotelaria', quantity: null, unitCost: '600', isActive: true },
@@ -90,6 +93,7 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
       id: 'test-2',
       name: 'Caravana Zero',
       travelerQuantity: '0',
+      freePassengers: '0',
       responsible: '',
       creationDate: '',
       quoteDate: '',
@@ -103,7 +107,7 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
       mentorCost: '0',
       calculationVersion: 'legacy-v1',
       corporateCostsSnapshot: { custoFixoMensal: '0', marketing: '0', sistema: '0', outrosCorporativos1: '0', outrosCorporativos2: '0', outrosCorporativos3: '0', horasMensais: '220' },
-      percentagesSnapshot: { imposto: '0', comissaoUltravel: '0', traderCaptador: '0', iof: '0', impostoRendaRemessa: '0' },
+      percentagesSnapshot: { imposto: '0', comissaoUltravel: '0', traderCaptador: '0', iof: '0', impostoRendaRemessa: '0', exchangeSpread: '0', exchangeIOF: '0' },
       operationItems: [],
       tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' }
     };

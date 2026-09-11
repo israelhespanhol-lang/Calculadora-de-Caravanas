@@ -10,8 +10,10 @@ import { SettingsModal } from './features/caravan/components/SettingsModal';
 import { CalculationMemory } from './features/caravan/components/CalculationMemory';
 import { BreakEvenChart } from './features/caravan/components/BreakEvenChart';
 import { PdfEditorModal } from './features/caravan/components/PdfEditorModal';
+import { WhatsAppCopyModal } from './features/caravan/components/WhatsAppCopyModal';
+import { ScenarioSimulator } from './features/caravan/components/ScenarioSimulator';
 
-import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, AlertTriangle, AlertCircle, CheckCircle2, MessageCircle } from 'lucide-react';
 import { formatCurrencyBRL } from './utils/currency';
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMemoryOpen, setIsMemoryOpen] = useState(false);
   const [isPdfEditorOpen, setIsPdfEditorOpen] = useState(false);
+  const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const [currencyVolatility, setCurrencyVolatility] = useState<number | null>(null);
 
   useEffect(() => {
@@ -77,6 +80,7 @@ function App() {
       id: uuidv4(),
       name: 'Nova Caravana',
       travelerQuantity: '20',
+      freePassengers: '0',
       responsible: '',
       creationDate: new Date().toISOString().split('T')[0],
       quoteDate: new Date().toISOString().split('T')[0],
@@ -189,6 +193,13 @@ function App() {
             <div className="flex space-x-3 w-full sm:w-auto justify-end overflow-x-auto pb-1 sm:pb-0">
               <button onClick={() => setIsMemoryOpen(true)} className="flex items-center space-x-2 text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-300 shrink-0">
                 <History size={16} /> <span className="hidden sm:inline text-sm font-medium">Memória</span>
+              </button>
+              <button 
+                onClick={() => setIsWhatsAppOpen(true)} 
+                className="flex items-center space-x-2 text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-2 rounded-lg transition-all duration-300 shrink-0 border border-emerald-500/20"
+              >
+                <MessageCircle size={16} />
+                <span className="hidden sm:inline text-sm font-medium">WhatsApp</span>
               </button>
               <button 
                 onClick={handleExportPDF} 
@@ -330,6 +341,9 @@ function App() {
             {/* Break-Even Chart */}
             <BreakEvenChart caravan={activeCaravan} result={result} />
             
+            {/* Scenario Simulator */}
+            <ScenarioSimulator caravan={activeCaravan} currentResult={result} />
+            
             </div>
           </div>
         </main>
@@ -365,6 +379,14 @@ function App() {
           caravan={activeCaravan}
           result={result}
           onClose={() => setIsPdfEditorOpen(false)}
+        />
+      )}
+
+      {isWhatsAppOpen && (
+        <WhatsAppCopyModal 
+          caravan={activeCaravan}
+          result={result}
+          onClose={() => setIsWhatsAppOpen(false)}
         />
       )}
     </>

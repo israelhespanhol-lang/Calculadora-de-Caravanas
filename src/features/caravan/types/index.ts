@@ -14,6 +14,8 @@ export interface DefaultPercentages {
   traderCaptador: string;
   iof: string;
   impostoRendaRemessa: string;
+  exchangeSpread: string;
+  exchangeIOF: string;
 }
 
 export interface Settings {
@@ -40,6 +42,7 @@ export interface CaravanData {
   id: string;
   name: string;
   travelerQuantity: string;
+  freePassengers: string;
   responsible: string;
   creationDate: string;
   quoteDate: string;

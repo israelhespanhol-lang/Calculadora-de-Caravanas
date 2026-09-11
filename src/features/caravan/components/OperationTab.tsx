@@ -58,12 +58,27 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">Qtd. Padrão de Viajantes</label>
+            <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center">
+              Qtd. Padrão de Viajantes
+              <span title="Tamanho total do grupo, incluindo pagantes e cortesias." className="ml-1 text-slate-500 cursor-help hover:text-blue-400"><HelpCircle size={14} /></span>
+            </label>
             <input 
               type="number" 
               className="w-full rounded-lg bg-blue-900/30 border border-blue-600/50 text-blue-100 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 p-2.5 transition-all duration-300"
               value={caravan.travelerQuantity}
               onChange={(e) => updateCaravan('travelerQuantity', e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center">
+              Cortesias Inclusas (Frees)
+              <span title="Passageiros grátis (ex: Pastor). O custo deles será rateado entre os pagantes." className="ml-1 text-slate-500 cursor-help hover:text-emerald-400"><HelpCircle size={14} /></span>
+            </label>
+            <input 
+              type="number" 
+              className="w-full rounded-lg bg-emerald-900/20 border border-emerald-600/50 text-emerald-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 p-2.5 transition-all duration-300"
+              value={caravan.freePassengers || '0'}
+              onChange={(e) => updateCaravan('freePassengers', e.target.value)}
             />
           </div>
           <div>

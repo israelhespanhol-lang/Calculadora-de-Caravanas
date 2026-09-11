@@ -12,6 +12,8 @@ interface Props {
   draftIndividualPrice?: string;
   draftTotalPrice?: string;
   draftObservations?: string;
+  comparisonCaravan?: CaravanData;
+  comparisonResult?: CaravanCalculationResult;
 }
 
 export const PrintView: React.FC<Props> = ({ 
@@ -21,7 +23,9 @@ export const PrintView: React.FC<Props> = ({
   draftTravelerQuantity,
   draftIndividualPrice,
   draftTotalPrice,
-  draftObservations
+  draftObservations,
+  comparisonCaravan,
+  comparisonResult
 }) => {
   const displayIndividual = draftIndividualPrice !== undefined ? draftIndividualPrice : result.valorVendaIndividual;
   const displayTotal = draftTotalPrice !== undefined ? draftTotalPrice : result.valorVendaCaravana;
@@ -68,27 +72,59 @@ export const PrintView: React.FC<Props> = ({
         </div>
 
         {/* Investimento Cards */}
-        <div className="grid grid-cols-2 gap-8 mb-12">
-          {/* Card Individual */}
-          <div className="bg-white border-2 border-slate-100 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-cyan-500"></div>
-            <h3 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-6">Investimento Individual</h3>
-            <div className="flex items-baseline gap-2 mb-2">
-              <p className="text-5xl font-black text-[#0f172a] tracking-tight">{formatCurrencyBRL(displayIndividual)}</p>
+        {!comparisonCaravan ? (
+          <div className="grid grid-cols-2 gap-8 mb-12">
+            {/* Card Individual */}
+            <div className="bg-white border-2 border-slate-100 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-cyan-500"></div>
+              <h3 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-6">Investimento Individual</h3>
+              <div className="flex items-baseline gap-2 mb-2">
+                <p className="text-5xl font-black text-[#0f172a] tracking-tight">{formatCurrencyBRL(displayIndividual)}</p>
+              </div>
+              <p className="text-sm font-medium text-blue-600 bg-blue-50 inline-block px-3 py-1 rounded-full">Por passageiro</p>
             </div>
-            <p className="text-sm font-medium text-blue-600 bg-blue-50 inline-block px-3 py-1 rounded-full">Por passageiro</p>
-          </div>
-          
-          {/* Card Total */}
-          <div className="bg-white border-2 border-slate-100 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-800 to-slate-600"></div>
-            <h3 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-6">Investimento Total do Grupo</h3>
-            <div className="flex items-baseline gap-2 mb-2">
-              <p className="text-4xl font-bold text-slate-700 tracking-tight">{formatCurrencyBRL(displayTotal)}</p>
+            
+            {/* Card Total */}
+            <div className="bg-white border-2 border-slate-100 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-800 to-slate-600"></div>
+              <h3 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-6">Investimento Total do Grupo</h3>
+              <div className="flex items-baseline gap-2 mb-2">
+                <p className="text-4xl font-bold text-slate-700 tracking-tight">{formatCurrencyBRL(displayTotal)}</p>
+              </div>
+              <p className="text-sm font-medium text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full">Para {draftTravelerQuantity || caravan.travelerQuantity} passageiros</p>
             </div>
-            <p className="text-sm font-medium text-slate-500 bg-slate-100 inline-block px-3 py-1 rounded-full">Para {draftTravelerQuantity || caravan.travelerQuantity} passageiros</p>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-6 mb-12">
+            {/* Pacote Principal */}
+            <div className="bg-white border-2 border-slate-100 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-cyan-500"></div>
+              <h3 className="text-sm font-bold text-slate-800 mb-6 pb-2 border-b border-slate-100">{draftName || caravan.name} (Opção 1)</h3>
+              <div className="mb-6">
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Por Passageiro</h4>
+                <p className="text-3xl font-black text-[#0f172a]">{formatCurrencyBRL(displayIndividual)}</p>
+              </div>
+              <div>
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Total do Grupo ({draftTravelerQuantity || caravan.travelerQuantity} pax)</h4>
+                <p className="text-xl font-bold text-slate-600">{formatCurrencyBRL(displayTotal)}</p>
+              </div>
+            </div>
+
+            {/* Pacote Secundário */}
+            <div className="bg-white border-2 border-slate-100 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+              <h3 className="text-sm font-bold text-slate-800 mb-6 pb-2 border-b border-slate-100">{comparisonCaravan.name} (Opção 2)</h3>
+              <div className="mb-6">
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Por Passageiro</h4>
+                <p className="text-3xl font-black text-[#0f172a]">{formatCurrencyBRL(comparisonResult!.valorVendaIndividual)}</p>
+              </div>
+              <div>
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Total do Grupo ({comparisonCaravan.travelerQuantity} pax)</h4>
+                <p className="text-xl font-bold text-slate-600">{formatCurrencyBRL(comparisonResult!.valorVendaCaravana)}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Itens Inclusos */}
         <div className="mb-10">
