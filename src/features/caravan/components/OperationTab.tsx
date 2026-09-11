@@ -71,11 +71,32 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
             <select 
               className="w-full rounded-lg bg-slate-800/50 border border-slate-600/50 text-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 p-2.5 transition-all duration-300"
               value={caravan.currency}
-              onChange={(e) => updateCaravan('currency', e.target.value)}
+              onChange={async (e) => {
+                const newCurrency = e.target.value;
+                updateCaravan('currency', newCurrency);
+                // Auto-fetch new exchange rate
+                try {
+                  const response = await fetch(`https://economia.awesomeapi.com.br/last/${newCurrency}-BRL`);
+                  const data = await response.json();
+                  const rate = data[`${newCurrency}BRL`]?.ask;
+                  if (rate) updateCaravan('exchangeRate', parseFloat(rate).toFixed(3));
+                } catch (err) {
+                  console.error('Failed to auto-fetch rate');
+                }
+              }}
             >
               <option value="USD">Dólar Americano (USD)</option>
               <option value="EUR">Euro (EUR)</option>
-              <option value="GBP">Libra (GBP)</option>
+              <option value="GBP">Libra Esterlina (GBP)</option>
+              <option value="CAD">Dólar Canadense (CAD)</option>
+              <option value="AUD">Dólar Australiano (AUD)</option>
+              <option value="CHF">Franco Suíço (CHF)</option>
+              <option value="JPY">Iene Japonês (JPY)</option>
+              <option value="ILS">Shekel Israelense (ILS)</option>
+              <option value="EGP">Libra Egípcia (EGP)</option>
+              <option value="AED">Dirham dos Emirados (AED)</option>
+              <option value="ARS">Peso Argentino (ARS)</option>
+              <option value="CLP">Peso Chileno (CLP)</option>
             </select>
           </div>
           <div>
@@ -94,10 +115,10 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
               <button 
                 onClick={async () => {
                   try {
-                    const currency = caravan.currency === 'GBP' ? 'GBP' : caravan.currency;
+                    const currency = caravan.currency;
                     const response = await fetch(`https://economia.awesomeapi.com.br/last/${currency}-BRL`);
                     const data = await response.json();
-                    const rate = data[`${currency}BRL`].ask;
+                    const rate = data[`${currency}BRL`]?.ask;
                     if (rate) {
                       updateCaravan('exchangeRate', parseFloat(rate).toFixed(3));
                     }
