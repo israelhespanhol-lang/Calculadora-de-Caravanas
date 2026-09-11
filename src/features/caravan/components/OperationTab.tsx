@@ -71,15 +71,39 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2 flex items-center">
-              Cortesias Inclusas (Frees)
+              Regra de Cortesias (Frees)
               <span title="Passageiros grátis (ex: Pastor). O custo deles será rateado entre os pagantes." className="ml-1 text-slate-500 cursor-help hover:text-emerald-400"><HelpCircle size={14} /></span>
             </label>
-            <input 
-              type="number" 
-              className="w-full rounded-lg bg-emerald-900/20 border border-emerald-600/50 text-emerald-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 p-2.5 transition-all duration-300"
-              value={caravan.freePassengers || '0'}
-              onChange={(e) => updateCaravan('freePassengers', e.target.value)}
-            />
+            <div className="flex space-x-2">
+              <select 
+                className="w-1/2 rounded-lg bg-emerald-900/20 border border-emerald-600/50 text-emerald-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 p-2.5 transition-all duration-300 text-sm"
+                value={caravan.freePassengerRule || 'manual'}
+                onChange={(e) => updateCaravan('freePassengerRule', e.target.value)}
+              >
+                <option value="manual">Manual</option>
+                <option value="proportional">Proporcional</option>
+              </select>
+
+              {caravan.freePassengerRule === 'proportional' ? (
+                <div className="w-1/2 flex items-center bg-emerald-900/20 border border-emerald-600/50 rounded-lg px-2 text-emerald-100 focus-within:ring-2 focus-within:ring-emerald-500/50">
+                  <span className="text-xs mr-1 opacity-70">1 a cada</span>
+                  <input 
+                    type="number"
+                    className="w-full bg-transparent outline-none text-sm"
+                    value={caravan.freePassengerRatio || '15'}
+                    onChange={(e) => updateCaravan('freePassengerRatio', e.target.value)}
+                  />
+                </div>
+              ) : (
+                <input 
+                  type="number" 
+                  className="w-1/2 rounded-lg bg-emerald-900/20 border border-emerald-600/50 text-emerald-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 p-2.5 transition-all duration-300"
+                  value={caravan.freePassengers || '0'}
+                  onChange={(e) => updateCaravan('freePassengers', e.target.value)}
+                  placeholder="Qtd"
+                />
+              )}
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2">Moeda da Cotação</label>

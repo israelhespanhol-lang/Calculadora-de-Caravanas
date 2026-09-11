@@ -58,6 +58,42 @@ export const PrintView: React.FC<Props> = ({
 
       <div className="p-12 flex-1 flex flex-col">
         
+        {/* Detalhes da Proposta */}
+        {caravan.proposalDetails && (caravan.proposalDetails.duration || caravan.proposalDetails.hotels || caravan.proposalDetails.flights || caravan.proposalDetails.inclusions) && (
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-6 border-b border-slate-200 pb-4">
+              <h3 className="text-xl font-bold text-[#0f172a]">Detalhes da Viagem</h3>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              {caravan.proposalDetails.duration && (
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 shadow-sm">
+                  <h4 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Duração / Período</h4>
+                  <p className="text-sm text-slate-700 font-medium">{caravan.proposalDetails.duration}</p>
+                </div>
+              )}
+              {caravan.proposalDetails.flights && (
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 shadow-sm">
+                  <h4 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Opções de Voos</h4>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{caravan.proposalDetails.flights}</p>
+                </div>
+              )}
+              {caravan.proposalDetails.hotels && (
+                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 shadow-sm col-span-2">
+                  <h4 className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-2">Hotéis e Acomodações</h4>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{caravan.proposalDetails.hotels}</p>
+                </div>
+              )}
+              {caravan.proposalDetails.inclusions && (
+                <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 shadow-sm col-span-2">
+                  <h4 className="text-xs uppercase tracking-widest text-emerald-600 font-bold mb-2">O que está Incluso</h4>
+                  <p className="text-sm text-emerald-900 whitespace-pre-wrap leading-relaxed font-medium">{caravan.proposalDetails.inclusions}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Resumo da Operação */}
         <div className="mb-10 bg-slate-50 border border-slate-100 p-6 rounded-2xl shadow-sm flex items-start gap-4">
           <div className="bg-blue-100 text-blue-600 p-3 rounded-xl shrink-0">

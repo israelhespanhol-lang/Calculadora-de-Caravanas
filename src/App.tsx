@@ -6,6 +6,7 @@ import { calculateCaravan } from './calculations/calculationEngine';
 
 import { OperationTab } from './features/caravan/components/OperationTab';
 import { CaravanTab } from './features/caravan/components/CaravanTab';
+import { ProposalTab } from './features/caravan/components/ProposalTab';
 import { SettingsModal } from './features/caravan/components/SettingsModal';
 import { CalculationMemory } from './features/caravan/components/CalculationMemory';
 import { BreakEvenChart } from './features/caravan/components/BreakEvenChart';
@@ -21,7 +22,7 @@ function App() {
   const [activeCaravan, setActiveCaravan] = useState<CaravanData | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   
-  const [activeTab, setActiveTab] = useState<'operation' | 'caravan'>('operation');
+  const [activeTab, setActiveTab] = useState<'operation' | 'caravan' | 'proposal'>('operation');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMemoryOpen, setIsMemoryOpen] = useState(false);
   const [isPdfEditorOpen, setIsPdfEditorOpen] = useState(false);
@@ -80,6 +81,8 @@ function App() {
       id: uuidv4(),
       name: 'Nova Caravana',
       travelerQuantity: '20',
+      freePassengerRule: 'manual',
+      freePassengerRatio: '15',
       freePassengers: '0',
       responsible: '',
       creationDate: new Date().toISOString().split('T')[0],
@@ -102,7 +105,8 @@ function App() {
         { id: uuidv4(), description: 'Tickets', quantity: null, unitCost: '0', isActive: true },
       ],
       tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' },
-      finalNetCosts: { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }
+      finalNetCosts: { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' },
+      proposalDetails: { duration: '', hotels: '', flights: '', inclusions: '' }
     };
     
     setActiveCaravan(newCaravan);
@@ -238,13 +242,23 @@ function App() {
               >
                 Caravana
               </button>
+              <button 
+                className={`flex-1 py-4 font-semibold text-sm text-center transition-all duration-300 ${activeTab === 'proposal' ? 'border-b-2 border-emerald-500 text-emerald-400 bg-white/5' : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'}`}
+                onClick={() => setActiveTab('proposal')}
+              >
+                Detalhes
+              </button>
             </div>
 
             <div className="p-8 overflow-y-auto">
-              {activeTab === 'operation' ? (
+              {activeTab === 'operation' && (
                 <OperationTab caravan={activeCaravan} updateCaravan={updateCaravanField} />
-              ) : (
+              )}
+              {activeTab === 'caravan' && (
                 <CaravanTab caravan={activeCaravan} updateCaravan={updateCaravanField} calculationResult={result} />
+              )}
+              {activeTab === 'proposal' && (
+                <ProposalTab caravan={activeCaravan} updateCaravan={updateCaravanField} />
               )}
             </div>
 

@@ -65,6 +65,14 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     `R$ ${operationCosts.custoOperacaoGrupoComRemessa.toFixed(2)}`
   );
 
+  // Calculate Frees
+  let calculatedFrees = Number(data.freePassengers || 0);
+  if (data.freePassengerRule === 'proportional') {
+    const ratio = Number(data.freePassengerRatio || 15);
+    const travelers = Number(data.travelerQuantity || 0);
+    calculatedFrees = ratio > 0 ? Math.floor(travelers / ratio) : 0;
+  }
+
   // 3. Caravan Pricing
   const pricing = calculateCaravanPricing(
     operationCosts.custoOperacaoGrupoComRemessa,
@@ -79,7 +87,7 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     data.tourLeaderCosts,
     data.mentorCost,
     data.travelerQuantity,
-    data.freePassengers || '0',
+    String(calculatedFrees),
     data.finalNetCosts
   );
 

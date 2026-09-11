@@ -45,11 +45,23 @@ export interface FinalNetCosts {
   fee: string;
 }
 
+export interface ProposalDetails {
+  duration: string;
+  hotels: string;
+  flights: string;
+  inclusions: string;
+}
+
 export interface CaravanData {
   id: string;
   name: string;
   travelerQuantity: string;
-  freePassengers: string;
+  
+  // Free Passengers Config
+  freePassengerRule: 'manual' | 'proportional';
+  freePassengerRatio: string;
+  freePassengers: string; // The explicit or calculated quantity
+  
   responsible: string;
   creationDate: string;
   quoteDate: string;
@@ -70,6 +82,7 @@ export interface CaravanData {
   mentorCost: string;
   
   finalNetCosts?: FinalNetCosts;
+  proposalDetails?: ProposalDetails;
 
   // Snapshots of the settings used when the project was created/updated
   corporateCostsSnapshot: CorporateCosts;
