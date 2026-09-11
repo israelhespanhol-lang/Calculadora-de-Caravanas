@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 import { v4 as uuidv4 } from 'uuid';
 import type { CaravanData, Settings } from './features/caravan/types';
 import { getCaravans, getSettings, saveCaravan, deleteCaravan, saveSettings } from './repositories/caravanRepository';
@@ -10,10 +8,10 @@ import { OperationTab } from './features/caravan/components/OperationTab';
 import { CaravanTab } from './features/caravan/components/CaravanTab';
 import { SettingsModal } from './features/caravan/components/SettingsModal';
 import { CalculationMemory } from './features/caravan/components/CalculationMemory';
-import { PrintView } from './features/caravan/components/PrintView';
 import { BreakEvenChart } from './features/caravan/components/BreakEvenChart';
+import { PdfEditorModal } from './features/caravan/components/PdfEditorModal';
 
-import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, Loader2, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { formatCurrencyBRL } from './utils/currency';
 
 function App() {
@@ -24,7 +22,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<'operation' | 'caravan'>('operation');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMemoryOpen, setIsMemoryOpen] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
+  const [isPdfEditorOpen, setIsPdfEditorOpen] = useState(false);
   const [currencyVolatility, setCurrencyVolatility] = useState<number | null>(null);
 
   useEffect(() => {
@@ -146,46 +144,8 @@ function App() {
     setActiveCaravan(prev => prev ? { ...prev, [field]: value } : prev);
   };
 
-  const handleExportPDF = async () => {
-    const element = document.getElementById('pdf-content');
-    if (!element || !activeCaravan) return;
-    
-    try {
-      setIsExporting(true);
-      // Salva estilos originais
-      const originalDisplay = element.style.display;
-      const originalPosition = element.style.position;
-      const originalTop = element.style.top;
-      
-      // Força a exibição para o html2canvas
-      element.style.display = 'block';
-      element.style.position = 'absolute';
-      element.style.top = '-9999px';
-      
-      const canvas = await html2canvas(element, { 
-        scale: 2, 
-        useCORS: true,
-        backgroundColor: '#ffffff'
-      });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Proposta_${activeCaravan.name || 'Caravana'}.pdf`);
-      
-      // Restaura
-      element.style.display = originalDisplay;
-      element.style.position = originalPosition;
-      element.style.top = originalTop;
-    } catch (e) {
-      console.error(e);
-      alert('Erro ao gerar PDF. Tente novamente.');
-    } finally {
-      setIsExporting(false);
-    }
+  const handleExportPDF = () => {
+    setIsPdfEditorOpen(true);
   };
 
   if (!settings || !activeCaravan) return <div className="p-8 text-center">Carregando...</div>;
@@ -232,11 +192,10 @@ function App() {
               </button>
               <button 
                 onClick={handleExportPDF} 
-                disabled={isExporting}
-                className="flex items-center space-x-2 text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-300 shrink-0 disabled:opacity-50"
+                className="flex items-center space-x-2 text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-300 shrink-0"
               >
-                {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-                <span className="hidden sm:inline text-sm font-medium">{isExporting ? 'Gerando...' : 'Exportar PDF'}</span>
+                <Download size={16} />
+                <span className="hidden sm:inline text-sm font-medium">Exportar PDF</span>
               </button>
               <button onClick={() => setIsSettingsOpen(true)} className="flex items-center space-x-2 text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-300 shrink-0">
                 <SettingsIcon size={16} /> <span className="hidden lg:inline text-sm font-medium">Configurações</span>
@@ -400,9 +359,14 @@ function App() {
           onClose={() => setIsMemoryOpen(false)} 
         />
       )}
-      <div id="pdf-content" className="hidden">
-        <PrintView caravan={activeCaravan} result={result} />
-      </div>
+
+      {isPdfEditorOpen && (
+        <PdfEditorModal 
+          caravan={activeCaravan}
+          result={result}
+          onClose={() => setIsPdfEditorOpen(false)}
+        />
+      )}
     </>
   );
 }
