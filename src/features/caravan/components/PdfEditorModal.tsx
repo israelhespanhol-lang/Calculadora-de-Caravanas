@@ -14,8 +14,8 @@ interface Props {
 export const PdfEditorModal: React.FC<Props> = ({ caravan, result, onClose }) => {
   const [draftName, setDraftName] = useState(caravan.name);
   const [draftTravelerQuantity, setDraftTravelerQuantity] = useState(caravan.travelerQuantity);
-  const [draftIndividualPrice, setDraftIndividualPrice] = useState(result.valorVendaIndividual);
-  const [draftTotalPrice, setDraftTotalPrice] = useState(result.valorVendaCaravana);
+  const [draftIndividualPrice, setDraftIndividualPrice] = useState<string | number>(Number(result.valorVendaIndividual).toFixed(2));
+  const [draftTotalPrice, setDraftTotalPrice] = useState<string | number>(Number(result.valorVendaCaravana).toFixed(2));
   const [draftObservations, setDraftObservations] = useState(caravan.observations || '');
   
   const [isExporting, setIsExporting] = useState(false);
@@ -134,8 +134,8 @@ export const PdfEditorModal: React.FC<Props> = ({ caravan, result, onClose }) =>
                 result={result} 
                 draftName={draftName}
                 draftTravelerQuantity={draftTravelerQuantity}
-                draftIndividualPrice={draftIndividualPrice}
-                draftTotalPrice={draftTotalPrice}
+                draftIndividualPrice={String(draftIndividualPrice)}
+                draftTotalPrice={String(draftTotalPrice)}
                 draftObservations={draftObservations}
               />
             </div>
