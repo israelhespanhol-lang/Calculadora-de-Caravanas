@@ -90,7 +90,7 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
                   <input 
                     type="number"
                     className="min-w-0 flex-1 bg-transparent outline-none text-sm p-1.5"
-                    value={caravan.freePassengerRatio || '15'}
+                    value={caravan.freePassengerRatio ?? ''}
                     onChange={(e) => updateCaravan('freePassengerRatio', e.target.value)}
                   />
                 </div>
@@ -98,7 +98,7 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
                 <input 
                   type="number" 
                   className="w-1/2 rounded-lg bg-emerald-900/20 border border-emerald-600/50 text-emerald-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 p-2.5 transition-all duration-300"
-                  value={caravan.freePassengers || '0'}
+                  value={caravan.freePassengers ?? ''}
                   onChange={(e) => updateCaravan('freePassengers', e.target.value)}
                   placeholder="Qtd"
                 />

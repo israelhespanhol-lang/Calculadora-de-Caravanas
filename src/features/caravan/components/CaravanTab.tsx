@@ -198,7 +198,7 @@ export const CaravanTab: React.FC<Props> = ({ caravan, updateCaravan, calculatio
               <input 
                 type="number" 
                 className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
-                value={caravan.finalNetCosts?.seguroViagem || '0'} 
+                value={caravan.finalNetCosts?.seguroViagem || ''} 
                 onChange={(e) => {
                   const val = e.target.value;
                   const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), seguroViagem: val };
@@ -211,7 +211,7 @@ export const CaravanTab: React.FC<Props> = ({ caravan, updateCaravan, calculatio
               <input 
                 type="number" 
                 className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
-                value={caravan.finalNetCosts?.brinde || '0'} 
+                value={caravan.finalNetCosts?.brinde || ''} 
                 onChange={(e) => {
                   const val = e.target.value;
                   const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), brinde: val };
@@ -224,7 +224,7 @@ export const CaravanTab: React.FC<Props> = ({ caravan, updateCaravan, calculatio
               <input 
                 type="number" 
                 className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
-                value={caravan.finalNetCosts?.aereo || '0'} 
+                value={caravan.finalNetCosts?.aereo || ''} 
                 onChange={(e) => {
                   const val = e.target.value;
                   const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), aereo: val };
@@ -237,7 +237,7 @@ export const CaravanTab: React.FC<Props> = ({ caravan, updateCaravan, calculatio
               <input 
                 type="number" 
                 className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
-                value={caravan.finalNetCosts?.fee || '0'} 
+                value={caravan.finalNetCosts?.fee || ''} 
                 onChange={(e) => {
                   const val = e.target.value;
                   const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), fee: val };
