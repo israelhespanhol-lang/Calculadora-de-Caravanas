@@ -131,10 +131,18 @@ export const calculateCaravanPricing = (
       .plus(toDecimal(finalNetCosts.fee));
   }
 
-  const valorVendaIndividual = valorVendaIndividualBase.plus(totalAdicionaisLiquidosUnitario);
+  // O custo dos adicionais líquidos se aplica a TODOS os passageiros (inclusive os frees que precisam de aéreo/seguro)
+  const totalCustoLiquidoCaravana = totalAdicionaisLiquidosUnitario.times(travelers);
+
+  // Esse custo total dos adicionais é rateado entre os PAGANTES
+  const rateioCustoLiquido = payingTravelers.greaterThan(0)
+    ? totalCustoLiquidoCaravana.dividedBy(payingTravelers)
+    : new Decimal(0);
+
+  const valorVendaIndividual = valorVendaIndividualBase.plus(rateioCustoLiquido);
   
-  // O total da caravana agora precisa contemplar os custos adicionais líquidos que são por passageiro * total de pagantes
-  const valorVendaCaravana = valorVendaCaravanaBase.plus(totalAdicionaisLiquidosUnitario.times(payingTravelers));
+  // O valor total de venda da caravana soma o custo de todos
+  const valorVendaCaravana = valorVendaCaravanaBase.plus(totalCustoLiquidoCaravana);
 
   return {
     custoInternoProjeto,
