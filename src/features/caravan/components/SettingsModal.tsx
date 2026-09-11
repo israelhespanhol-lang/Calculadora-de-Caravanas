@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Settings, CaravanData } from '../types';
+import { Lightbulb } from 'lucide-react';
 
 interface Props {
   onClose: () => void;
@@ -11,6 +12,16 @@ interface Props {
 
 export const SettingsModal: React.FC<Props> = ({ onClose, globalSettings, onSaveGlobal, activeCaravan, onUpdateCaravanSettings }) => {
   const [localSettings, setLocalSettings] = React.useState<Settings>(globalSettings);
+
+  const getMarkupSuggestion = () => {
+    const c = activeCaravan.currency;
+    if (['EUR', 'GBP', 'CHF'].includes(c)) return { val: '18', desc: 'Europa (Premium)' };
+    if (['USD', 'CAD', 'AUD'].includes(c)) return { val: '15', desc: 'América do Norte/Oceania' };
+    if (['ILS', 'EGP', 'AED'].includes(c)) return { val: '12', desc: 'Oriente Médio (Volume)' };
+    if (['ARS', 'CLP'].includes(c)) return { val: '10', desc: 'América do Sul' };
+    return { val: '15', desc: 'Padrão' };
+  };
+  const suggestion = getMarkupSuggestion();
 
   const updateCost = (field: keyof Settings['corporateCosts'], value: string) => {
     setLocalSettings({
@@ -88,6 +99,13 @@ export const SettingsModal: React.FC<Props> = ({ onClose, globalSettings, onSave
               <div>
                 <label className="block text-sm text-slate-400 mb-2">Comissão Ultravel</label>
                 <input type="number" step="0.01" className="w-full border-slate-600/50 rounded-lg p-2.5 bg-slate-800/50 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all" value={localSettings.defaultPercentages.comissaoUltravel} onChange={e => updatePerc('comissaoUltravel', e.target.value)} />
+                <div 
+                  className="mt-1.5 flex items-center space-x-1 text-[11px] text-emerald-400 cursor-pointer hover:text-emerald-300 transition-colors" 
+                  onClick={() => updatePerc('comissaoUltravel', suggestion.val)}
+                  title="Clique para aplicar a sugestão da IA"
+                >
+                  <Lightbulb size={12} /> <span>Sugestão IA: {suggestion.val}% ({suggestion.desc})</span>
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-slate-400 mb-2">Trader / Captador</label>

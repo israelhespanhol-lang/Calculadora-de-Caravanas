@@ -11,8 +11,9 @@ import { CaravanTab } from './features/caravan/components/CaravanTab';
 import { SettingsModal } from './features/caravan/components/SettingsModal';
 import { CalculationMemory } from './features/caravan/components/CalculationMemory';
 import { PrintView } from './features/caravan/components/PrintView';
+import { BreakEvenChart } from './features/caravan/components/BreakEvenChart';
 
-import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, Loader2 } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Plus, Trash2, Copy, History, Download, TrendingUp, Loader2, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { formatCurrencyBRL } from './utils/currency';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMemoryOpen, setIsMemoryOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [currencyVolatility, setCurrencyVolatility] = useState<number | null>(null);
 
   useEffect(() => {
     const loadedSettings = getSettings();
@@ -38,6 +40,29 @@ function App() {
       createNewCaravan(loadedSettings);
     }
   }, []);
+
+  useEffect(() => {
+    if (!activeCaravan?.currency) return;
+    
+    const fetchVolatility = async () => {
+      try {
+        const currency = activeCaravan.currency === 'GBP' ? 'GBP' : activeCaravan.currency;
+        const res = await fetch(`https://economia.awesomeapi.com.br/json/daily/${currency}-BRL/15`);
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const values = data.map(d => parseFloat(d.ask));
+          const max = Math.max(...values);
+          const min = Math.min(...values);
+          if (min > 0) {
+            setCurrencyVolatility(((max - min) / min) * 100);
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao buscar volatilidade", e);
+      }
+    };
+    fetchVolatility();
+  }, [activeCaravan?.currency]);
 
   const createNewCaravan = (currentSettings: Settings) => {
     const newCaravan: CaravanData = {
@@ -280,12 +305,23 @@ function App() {
               </div>
             </div>
 
-            {/* Simulador de Cenários */}
             <div className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-2xl p-6 sticky top-[500px]">
               <h2 className="text-sm font-bold text-slate-300 mb-4 flex items-center space-x-2">
                 <TrendingUp size={16} className="text-emerald-400" />
                 <span>Simulação de Risco (Câmbio)</span>
               </h2>
+
+              {currencyVolatility !== null && (
+                <div className={`mt-3 mb-4 p-3 rounded-lg border flex items-start space-x-2 text-sm ${currencyVolatility > 3 ? 'bg-red-500/10 border-red-500/30 text-red-300' : currencyVolatility >= 1 ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'}`}>
+                  {currencyVolatility > 3 ? <AlertTriangle size={16} className="mt-0.5 shrink-0" /> : currencyVolatility >= 1 ? <AlertCircle size={16} className="mt-0.5 shrink-0" /> : <CheckCircle2 size={16} className="mt-0.5 shrink-0" />}
+                  <div>
+                    <p className="font-bold">Volatilidade (15 dias): {currencyVolatility.toFixed(2)}%</p>
+                    <p className="opacity-80 text-xs mt-1">
+                      {currencyVolatility > 3 ? 'Moeda altamente instável. Suba a margem de segurança.' : currencyVolatility >= 1 ? 'Oscilação moderada. Acompanhe as notícias internacionais.' : 'Moeda estável e segura para precificação a longo prazo.'}
+                    </p>
+                  </div>
+                </div>
+              )}
               
               <div className="space-y-3">
                 {/* Cenário Otimista */}
@@ -320,6 +356,9 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* Break-Even Chart */}
+            <BreakEvenChart caravan={activeCaravan} result={result} />
 
           </div>
         </main>
