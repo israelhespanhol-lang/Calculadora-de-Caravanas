@@ -279,8 +279,9 @@ function App() {
 
           {/* Right Column - Summary Panel */}
           <div className="w-full md:w-80 lg:w-[380px] flex flex-col gap-6">
-            <div className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-2xl p-8 sticky top-28">
-              <h2 className="text-lg font-bold text-blue-100 mb-6 flex items-center space-x-2">
+            <div className="sticky top-24 flex flex-col gap-6 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pb-8">
+              <div className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-2xl p-8">
+                <h2 className="text-lg font-bold text-blue-100 mb-6 flex items-center space-x-2">
                 <span className="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
                 <span>Resumo da Caravana</span>
               </h2>
@@ -305,7 +306,7 @@ function App() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-2xl p-6 sticky top-[500px]">
+            <div className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-2xl p-6">
               <h2 className="text-sm font-bold text-slate-300 mb-4 flex items-center space-x-2">
                 <TrendingUp size={16} className="text-emerald-400" />
                 <span>Simulação de Risco (Câmbio)</span>
@@ -359,7 +360,8 @@ function App() {
 
             {/* Break-Even Chart */}
             <BreakEvenChart caravan={activeCaravan} result={result} />
-
+            
+            </div>
           </div>
         </main>
       </div>
