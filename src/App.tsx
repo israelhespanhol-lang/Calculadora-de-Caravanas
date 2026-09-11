@@ -108,9 +108,7 @@ function App() {
   };
 
   const updateCaravanField = (field: keyof CaravanData, value: any) => {
-    if (activeCaravan) {
-      setActiveCaravan({ ...activeCaravan, [field]: value });
-    }
+    setActiveCaravan(prev => prev ? { ...prev, [field]: value } : prev);
   };
 
   const handleExportPDF = async () => {
