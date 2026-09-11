@@ -86,10 +86,10 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
 
               {caravan.freePassengerRule === 'proportional' ? (
                 <div className="w-1/2 flex items-center bg-emerald-900/20 border border-emerald-600/50 rounded-lg px-2 text-emerald-100 focus-within:ring-2 focus-within:ring-emerald-500/50">
-                  <span className="text-xs mr-1 opacity-70">1 a cada</span>
+                  <span className="text-xs mr-1 opacity-70 whitespace-nowrap">1 a cada</span>
                   <input 
                     type="number"
-                    className="w-full bg-transparent outline-none text-sm"
+                    className="min-w-0 flex-1 bg-transparent outline-none text-sm p-1.5"
                     value={caravan.freePassengerRatio || '15'}
                     onChange={(e) => updateCaravan('freePassengerRatio', e.target.value)}
                   />

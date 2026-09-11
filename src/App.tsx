@@ -153,6 +153,50 @@ function App() {
     setActiveCaravan(prev => prev ? { ...prev, [field]: value } : prev);
   };
 
+  const handleDemoData = () => {
+    if (!activeCaravan) return;
+    updateCaravanField('name', 'Caravana Itália e Terra Santa');
+    updateCaravanField('travelerQuantity', '45');
+    updateCaravanField('freePassengerRule', 'proportional');
+    updateCaravanField('freePassengerRatio', '15');
+    updateCaravanField('projectHours', '10');
+    updateCaravanField('designerFixed', '350');
+    updateCaravanField('mentorCost', '1500');
+    
+    updateCaravanField('operationItems', [
+      { id: uuidv4(), description: 'Hotelaria (4 Estrelas)', quantity: '45', unitCost: '850', isActive: true },
+      { id: uuidv4(), description: 'Transfer Aeroporto', quantity: '1', unitCost: '600', isActive: true },
+      { id: uuidv4(), description: 'Guia Local', quantity: '10', unitCost: '250', isActive: true },
+      { id: uuidv4(), description: 'Ingressos Museus', quantity: '45', unitCost: '85', isActive: true },
+    ]);
+    
+    updateCaravanField('tourLeaderCosts', { aereo: '1200', hotel: '800', seguro: '150', outros: '300' });
+    updateCaravanField('finalNetCosts', { seguroViagem: '200', brinde: '50', aereo: '950', fee: '150' });
+    updateCaravanField('proposalDetails', { 
+      duration: '12 dias / 11 noites', 
+      hotels: 'Hotel Roma Cavalieri (3 noites)\nDan Jerusalem Hotel (4 noites)', 
+      flights: 'LATAM Direto - Bagagem de 23kg', 
+      inclusions: 'Café da manhã todos os dias\nGuia falando Português\nIngressos listados no roteiro' 
+    });
+  };
+
+  const handleClearData = () => {
+    if (!activeCaravan) return;
+    if (confirm('Tem certeza que deseja zerar todos os dados deste projeto?')) {
+      updateCaravanField('name', '');
+      updateCaravanField('travelerQuantity', '0');
+      updateCaravanField('freePassengerRule', 'manual');
+      updateCaravanField('freePassengers', '0');
+      updateCaravanField('projectHours', '0');
+      updateCaravanField('designerFixed', '0');
+      updateCaravanField('mentorCost', '0');
+      updateCaravanField('operationItems', []);
+      updateCaravanField('tourLeaderCosts', { aereo: '0', hotel: '0', seguro: '0', outros: '0' });
+      updateCaravanField('finalNetCosts', { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' });
+      updateCaravanField('proposalDetails', { duration: '', hotels: '', flights: '', inclusions: '' });
+    }
+  };
+
   const handleExportPDF = () => {
     setIsPdfEditorOpen(true);
   };
@@ -262,13 +306,23 @@ function App() {
               )}
             </div>
 
-            <div className="bg-slate-900/50 border-t border-white/10 p-5 flex justify-between items-center mt-auto">
-              <button onClick={handleDelete} className="text-red-400 hover:text-red-300 hover:bg-red-400/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium">
-                <Trash2 size={16} /> <span>Excluir Projeto</span>
-              </button>
-              <button onClick={handleDuplicate} className="text-slate-300 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium">
-                <Copy size={16} /> <span>Duplicar Projeto</span>
-              </button>
+            <div className="bg-slate-900/50 border-t border-white/10 p-5 flex justify-between items-center mt-auto flex-wrap gap-4">
+              <div className="flex space-x-3">
+                <button onClick={handleDelete} className="text-red-400 hover:text-red-300 hover:bg-red-400/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium">
+                  <Trash2 size={16} /> <span>Excluir Projeto</span>
+                </button>
+                <button onClick={handleClearData} className="text-orange-400 hover:text-orange-300 hover:bg-orange-400/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium">
+                  <span>Zerar Tudo</span>
+                </button>
+              </div>
+              <div className="flex space-x-3">
+                <button onClick={handleDemoData} className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-400/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium border border-emerald-500/20">
+                  <span>Preencher Exemplo</span>
+                </button>
+                <button onClick={handleDuplicate} className="text-slate-300 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all duration-300 flex items-center space-x-2 text-sm font-medium">
+                  <Copy size={16} /> <span>Duplicar Projeto</span>
+                </button>
+              </div>
             </div>
           </div>
 
