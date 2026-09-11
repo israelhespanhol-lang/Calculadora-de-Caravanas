@@ -64,7 +64,17 @@ function App() {
     fetchVolatility();
   }, [activeCaravan?.currency]);
 
-  const createNewCaravan = (currentSettings: Settings) => {
+  const createNewCaravan = async (currentSettings: Settings) => {
+    let initialRate = '5.000';
+    try {
+      const response = await fetch(`https://economia.awesomeapi.com.br/last/USD-BRL`);
+      const data = await response.json();
+      const rate = data['USDBRL']?.ask;
+      if (rate) initialRate = parseFloat(rate).toFixed(3);
+    } catch (e) {
+      console.error('Failed to fetch initial USD rate');
+    }
+
     const newCaravan: CaravanData = {
       id: uuidv4(),
       name: 'Nova Caravana',
@@ -74,7 +84,7 @@ function App() {
       quoteDate: new Date().toISOString().split('T')[0],
       observations: '',
       currency: 'USD',
-      exchangeRate: '5.26', // Exemplo inicial
+      exchangeRate: initialRate,
       projectHours: '3',
       designerFixed: '0',
       otherFixed2: '0',

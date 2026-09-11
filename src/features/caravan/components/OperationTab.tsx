@@ -1,6 +1,6 @@
 import React from 'react';
 import type { CaravanData } from '../types';
-import { Plus, Trash2, HelpCircle, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, HelpCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
@@ -108,30 +108,10 @@ export const OperationTab: React.FC<Props> = ({ caravan, updateCaravan }) => {
               <input 
                 type="number" 
                 step="0.001"
-                className="w-full rounded-lg bg-blue-900/30 border border-blue-600/50 text-blue-100 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 p-2.5 pr-[110px] transition-all duration-300"
+                className="w-full rounded-lg bg-blue-900/30 border border-blue-600/50 text-blue-100 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 p-2.5 transition-all duration-300"
                 value={caravan.exchangeRate}
                 onChange={(e) => updateCaravan('exchangeRate', e.target.value)}
               />
-              <button 
-                onClick={async () => {
-                  try {
-                    const currency = caravan.currency;
-                    const response = await fetch(`https://economia.awesomeapi.com.br/last/${currency}-BRL`);
-                    const data = await response.json();
-                    const rate = data[`${currency}BRL`]?.ask;
-                    if (rate) {
-                      updateCaravan('exchangeRate', parseFloat(rate).toFixed(3));
-                    }
-                  } catch (e) {
-                    alert('Erro ao buscar cotação. Tente novamente mais tarde.');
-                  }
-                }}
-                className="absolute right-1.5 top-1.5 bottom-1.5 px-3 text-xs bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 hover:text-emerald-300 rounded flex items-center space-x-1.5 border border-emerald-500/30 font-medium transition-colors"
-                title="Puxar cotação comercial atual em tempo real"
-              >
-                <RefreshCw size={14} />
-                <span>Atualizar</span>
-              </button>
             </div>
           </div>
         </div>
