@@ -38,6 +38,13 @@ export interface TourLeaderCosts {
   outros: string;
 }
 
+export interface FinalNetCosts {
+  seguroViagem: string;
+  brinde: string;
+  aereo: string;
+  fee: string;
+}
+
 export interface CaravanData {
   id: string;
   name: string;
@@ -61,6 +68,8 @@ export interface CaravanData {
   
   tourLeaderCosts: TourLeaderCosts;
   mentorCost: string;
+  
+  finalNetCosts?: FinalNetCosts;
 
   // Snapshots of the settings used when the project was created/updated
   corporateCostsSnapshot: CorporateCosts;

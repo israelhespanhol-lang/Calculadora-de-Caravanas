@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import type { TourLeaderCosts } from '../features/caravan/types';
+import type { TourLeaderCosts, FinalNetCosts } from '../features/caravan/types';
 import { parsePercentage, toDecimal } from './decimal';
 import { LEGACY_ULTRAVEL_COMMISSION } from './legacyCommission';
 
@@ -39,7 +39,8 @@ export const calculateCaravanPricing = (
   tourLeaderCosts: TourLeaderCosts,
   mentorCost: string | number,
   travelerQuantity: string | number,
-  freePassengers: string | number
+  freePassengers: string | number,
+  finalNetCosts?: FinalNetCosts
 ): CaravanPricingResult => {
   
   const impostoPerc = parsePercentage(impostoPercentage);
@@ -106,8 +107,8 @@ export const calculateCaravanPricing = (
   const mentorSemImposto = toDecimal(mentorCost);
   const mentorComImposto = divisorImposto.isZero() ? new Decimal(0) : mentorSemImposto.dividedBy(divisorImposto);
 
-  // 8. PREÇO FINAL
-  const valorVendaCaravana = totalOperacaoCaravana
+  // 8. PREÇO FINAL BASE
+  let valorVendaCaravanaBase = totalOperacaoCaravana
     .plus(tourLeaderComImposto)
     .plus(mentorComImposto);
 
@@ -117,9 +118,23 @@ export const calculateCaravanPricing = (
   
   // Rateio inteligente das cortesias: O custo total do grupo continua sendo para todos, 
   // mas o valor individual de venda é rateado apenas entre os pagantes.
-  const valorVendaIndividual = payingTravelers.greaterThan(0) 
-    ? valorVendaCaravana.dividedBy(payingTravelers)
+  let valorVendaIndividualBase = payingTravelers.greaterThan(0) 
+    ? valorVendaCaravanaBase.dividedBy(payingTravelers)
     : new Decimal(0);
+
+  // 9. CUSTOS LÍQUIDOS ADICIONAIS (Por pessoa)
+  let totalAdicionaisLiquidosUnitario = new Decimal(0);
+  if (finalNetCosts) {
+    totalAdicionaisLiquidosUnitario = toDecimal(finalNetCosts.seguroViagem)
+      .plus(toDecimal(finalNetCosts.brinde))
+      .plus(toDecimal(finalNetCosts.aereo))
+      .plus(toDecimal(finalNetCosts.fee));
+  }
+
+  const valorVendaIndividual = valorVendaIndividualBase.plus(totalAdicionaisLiquidosUnitario);
+  
+  // O total da caravana agora precisa contemplar os custos adicionais líquidos que são por passageiro * total de pagantes
+  const valorVendaCaravana = valorVendaCaravanaBase.plus(totalAdicionaisLiquidosUnitario.times(payingTravelers));
 
   return {
     custoInternoProjeto,

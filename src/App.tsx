@@ -101,7 +101,8 @@ function App() {
         { id: uuidv4(), description: 'Guias', quantity: null, unitCost: '0', isActive: true },
         { id: uuidv4(), description: 'Tickets', quantity: null, unitCost: '0', isActive: true },
       ],
-      tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' }
+      tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' },
+      finalNetCosts: { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }
     };
     
     setActiveCaravan(newCaravan);

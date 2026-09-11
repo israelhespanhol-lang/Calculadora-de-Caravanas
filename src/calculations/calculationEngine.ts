@@ -79,7 +79,8 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     data.tourLeaderCosts,
     data.mentorCost,
     data.travelerQuantity,
-    data.freePassengers || '0'
+    data.freePassengers || '0',
+    data.finalNetCosts
   );
 
   addMemory(

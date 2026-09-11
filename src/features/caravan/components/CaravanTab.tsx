@@ -182,6 +182,73 @@ export const CaravanTab: React.FC<Props> = ({ caravan, updateCaravan, calculatio
         </div>
       </section>
 
+      <section>
+        <h3 className="text-lg font-bold text-blue-300 mb-6 flex items-center space-x-2 border-b border-white/10 pb-3">
+          <span className="w-1.5 h-5 bg-blue-400 rounded-full"></span>
+          <span>Adicionais Líquidos (Por Pessoa)</span>
+        </h3>
+        <p className="text-sm text-slate-400 mb-4">
+          Valores fixos cobrados diretamente do passageiro. Estes itens não sofrem nenhum repasse de impostos, taxas, lucros ou comissões. São adicionados 100% limpos ao final do valor individual.
+        </p>
+
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:bg-white/10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">Seguro Viagem</label>
+              <input 
+                type="number" 
+                className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
+                value={caravan.finalNetCosts?.seguroViagem || '0'} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), seguroViagem: val };
+                  updateCaravan('finalNetCosts', newFinalNetCosts as any);
+                }} 
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">Brinde</label>
+              <input 
+                type="number" 
+                className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
+                value={caravan.finalNetCosts?.brinde || '0'} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), brinde: val };
+                  updateCaravan('finalNetCosts', newFinalNetCosts as any);
+                }} 
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">Aéreo</label>
+              <input 
+                type="number" 
+                className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
+                value={caravan.finalNetCosts?.aereo || '0'} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), aereo: val };
+                  updateCaravan('finalNetCosts', newFinalNetCosts as any);
+                }} 
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">Fee</label>
+              <input 
+                type="number" 
+                className="w-full rounded-lg border-slate-600/50 bg-slate-800/50 text-white p-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all duration-300" 
+                value={caravan.finalNetCosts?.fee || '0'} 
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const newFinalNetCosts = { ...(caravan.finalNetCosts || { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }), fee: val };
+                  updateCaravan('finalNetCosts', newFinalNetCosts as any);
+                }} 
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };

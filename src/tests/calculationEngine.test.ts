@@ -51,6 +51,12 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
         hotel: '1000',
         seguro: '300',
         outros: '1000',
+      },
+      finalNetCosts: {
+        seguroViagem: '0',
+        brinde: '0',
+        aereo: '0',
+        fee: '0'
       }
     };
 
@@ -109,7 +115,8 @@ describe('Calculation Engine - Mandatory Regression Scenario', () => {
       corporateCostsSnapshot: { custoFixoMensal: '0', marketing: '0', sistema: '0', outrosCorporativos1: '0', outrosCorporativos2: '0', outrosCorporativos3: '0', horasMensais: '220' },
       percentagesSnapshot: { imposto: '0', comissaoUltravel: '0', traderCaptador: '0', iof: '0', impostoRendaRemessa: '0', exchangeSpread: '0', exchangeIOF: '0' },
       operationItems: [],
-      tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' }
+      tourLeaderCosts: { aereo: '0', hotel: '0', seguro: '0', outros: '0' },
+      finalNetCosts: { seguroViagem: '0', brinde: '0', aereo: '0', fee: '0' }
     };
 
     const result = calculateCaravan(input);
