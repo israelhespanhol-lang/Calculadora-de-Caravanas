@@ -352,6 +352,14 @@ function App() {
                   <p className="text-4xl font-black text-white relative z-10 tracking-tight">{formatCurrencyBRL(result.valorVendaIndividual)}</p>
                   <p className="text-xs text-emerald-300/80 mt-2 relative z-10 font-medium">por viajante ({activeCaravan.travelerQuantity} total)</p>
                 </div>
+
+                <button 
+                  onClick={() => setIsMemoryOpen(true)}
+                  className="w-full mt-2 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-xl flex items-center justify-center space-x-2 transition-all duration-300 shadow-lg group"
+                >
+                  <History size={18} className="text-blue-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-semibold">Auditar Cálculos (Extrato)</span>
+                </button>
               </div>
             </div>
 

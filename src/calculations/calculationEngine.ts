@@ -44,10 +44,36 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     `${data.currency} ${operationCosts.totalGrupoMoeda.toFixed(2)}`
   );
 
+  data.operationItems.forEach(item => {
+    if (item.isActive) {
+      const qty = item.quantity !== null && item.quantity !== '' ? Number(item.quantity) : Number(data.travelerQuantity);
+      const unitCost = Number(item.unitCost);
+      const totalItem = qty * unitCost;
+      addMemory(
+        `↳ ${item.description}`,
+        `Qtd × Valor Unitário`,
+        `${qty} × ${data.currency} ${unitCost.toFixed(2)}`,
+        `${data.currency} ${totalItem.toFixed(2)}`,
+        1
+      );
+    }
+  });
+
+  const exchangeSpreadStr = data.percentagesSnapshot.exchangeSpread ? `${data.percentagesSnapshot.exchangeSpread}%` : '0%';
+  const effectiveExchangeRate = Number(data.exchangeRate) * (1 + (Number(data.percentagesSnapshot.exchangeSpread) || 0) / 100);
+
+  addMemory(
+    "Câmbio Efetivo",
+    "Cotação Base + Spread Cambial",
+    `R$ ${data.exchangeRate} + ${exchangeSpreadStr}`,
+    `R$ ${effectiveExchangeRate.toFixed(4)}`,
+    1
+  );
+
   addMemory(
     "Total Operação em Real (sem remessa)", 
-    "Total Grupo Moeda × Cotação", 
-    `${data.currency} ${operationCosts.totalGrupoMoeda.toFixed(2)} × R$ ${data.exchangeRate}`,
+    "Total Grupo Moeda × Câmbio Efetivo", 
+    `${data.currency} ${operationCosts.totalGrupoMoeda.toFixed(2)} × R$ ${effectiveExchangeRate.toFixed(4)}`,
     `R$ ${operationCosts.totalGrupoRealSemRemessa.toFixed(2)}`
   );
 
@@ -71,6 +97,19 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     const ratio = Number(data.freePassengerRatio || 15);
     const travelers = Number(data.travelerQuantity || 0);
     calculatedFrees = ratio > 0 ? Math.floor(travelers / ratio) : 0;
+    addMemory(
+      "Cálculo de Cortesia (Frees)",
+      "Viajantes Pagantes / Fator de Proporção",
+      `${travelers} / ${ratio} (arredondado para baixo)`,
+      `${calculatedFrees} free(s)`
+    );
+  } else {
+    addMemory(
+      "Cálculo de Cortesia (Frees)",
+      "Definido Manualmente",
+      `${data.freePassengers} free(s) informados`,
+      `${calculatedFrees} free(s)`
+    );
   }
 
   // 3. Caravan Pricing
@@ -139,6 +178,10 @@ export const calculateCaravan = (data: CaravanData): CaravanCalculationResult =>
     `-`,
     `R$ ${pricing.tourLeaderComImposto.toFixed(2)}`
   );
+  addMemory(`↳ Aéreo`, `Custo Informado`, `-`, `R$ ${Number(data.tourLeaderCosts.aereo).toFixed(2)}`, 1);
+  addMemory(`↳ Hotel`, `Custo Informado`, `-`, `R$ ${Number(data.tourLeaderCosts.hotel).toFixed(2)}`, 1);
+  addMemory(`↳ Seguro`, `Custo Informado`, `-`, `R$ ${Number(data.tourLeaderCosts.seguro).toFixed(2)}`, 1);
+  addMemory(`↳ Outros`, `Custo Informado`, `-`, `R$ ${Number(data.tourLeaderCosts.outros).toFixed(2)}`, 1);
 
   addMemory(
     "Mentor (com imposto)", 

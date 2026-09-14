@@ -31,8 +31,13 @@ export const CalculationMemory: React.FC<Props> = ({ memory, onClose }) => {
             </thead>
             <tbody className="divide-y divide-white/5 bg-slate-800/20">
               {memory.map((item, index) => (
-                <tr key={index} className="hover:bg-white/5 transition-colors duration-300">
-                  <td className="p-4 text-sm font-medium text-slate-200">{item.description}</td>
+                <tr key={index} className={`hover:bg-white/5 transition-colors duration-300 ${item.indentationLevel ? 'bg-slate-800/40' : ''}`}>
+                  <td 
+                    className={`p-4 text-sm font-medium text-slate-200 ${item.indentationLevel ? 'border-l-2 border-emerald-500/50' : ''}`}
+                    style={{ paddingLeft: item.indentationLevel ? `${item.indentationLevel * 1.5 + 1}rem` : '1rem' }}
+                  >
+                    <span className={item.indentationLevel ? 'text-slate-300' : 'text-slate-100'}>{item.description}</span>
+                  </td>
                   <td className="p-4 text-xs text-blue-300 font-mono bg-slate-900/50">{item.formula}</td>
                   <td className="p-4 text-xs text-slate-400">{item.valueUsed}</td>
                   <td className="p-4 text-sm font-bold text-blue-400 text-right">{item.result}</td>
